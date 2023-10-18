@@ -1,5 +1,5 @@
 from pickomino import Pickomino
-from player import Player
+from game_player import Player
 
 if __name__ == "__main__":
     player_1 = Player()

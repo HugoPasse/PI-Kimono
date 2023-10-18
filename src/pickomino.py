@@ -1,4 +1,4 @@
-from player import *
+from game_player import *
 from utils import *
 from typing import List
 from project_types import ActionType
