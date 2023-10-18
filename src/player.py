@@ -17,11 +17,13 @@ class dice_launcher:
 			return -1
 		self.picked[i] = 1
 
+		count = np.count_nonzero(self.dices == i)
+		self.remaining -= count
+
 		if i == 0:
-			self.score += 5
-			self.remaining -= 1
+			self.score += 5 * count
 		else:
-			self.score += i*np.count_nonzero(self.dices == i)
+			self.score += i * count
 		return 0
 	
 	def stop(self):
@@ -40,4 +42,5 @@ class dice_launcher:
 		print('Dices :',self.dices)
 		print('Score :',self.score)
 		print('Taken :',np.argwhere(self.picked == 1).flatten())
+		print('Remainnig :', self.remaining)
 		print('')
