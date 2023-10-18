@@ -1,8 +1,5 @@
 from enum import Enum
 
-type Tile = int
-type Action = (ActionType, Tile)
-
 
 class ActionType(Enum):
     NONE = 1
