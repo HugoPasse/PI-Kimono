@@ -1,5 +1,5 @@
 from game_player import *
-from utils import *
+from game_utils import *
 from typing import List
 from project_types import ActionType
 import os
