@@ -1,0 +1,3 @@
+NONE = 1
+PICK_TILE = 2
+STEAL_TILE = 3
