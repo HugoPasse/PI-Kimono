@@ -19,7 +19,6 @@ class Pickomino:
         player = 0
         adversary = 1
         while len(self.available_tiles) > 0:
-            print(player, adversary)
             self.display(player, adversary)
             last_tile: int = safe_last_tile(self.players_tiles[player])
             adversary_tiles: List[int] = self.players_tiles[adversary]
