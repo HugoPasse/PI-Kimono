@@ -7,17 +7,17 @@ import numpy as np
 class Dice:
     def __init__(self, verbose=False):
         self.dices = np.random.randint(6, size=8, dtype=np.int16)
-        self.picked = np.zeros(6, dtype=np.int16)
+        self.picked = []
         self.score = 0
         self.remaining = 8
         self.verbose = verbose
 
     def keep(self, i) -> bool:
-        if self.picked[i] == 1 or np.where(self.dices == i)[0].size == 0:
+        if (i in self.picked) or (np.where(self.dices == i)[0].size == 0):
             if self.verbose: print('Can\'t pick', i)
             return False
 
-        self.picked[i] = 1
+        self.picked.append(i)
 
         count = np.count_nonzero(self.dices == i)
         self.remaining -= count
@@ -29,7 +29,7 @@ class Dice:
         return True
 
     def stop(self):
-        if self.picked[0] == 1:
+        if 0 in self.picked:
             return self.score
         return -1
 
@@ -42,14 +42,14 @@ class Dice:
 
     def print_state(self):
         print('Score :', self.score)
-        print('Taken :', np.argwhere(self.picked == 1).flatten())
+        print('Taken :', self.picked)
         print('Remaining :', self.remaining)
         print('Dices :', self.dices)
         print('')
 
     def can_pick(self) -> bool:
         for dice in self.dices:
-            if self.picked[dice] == 0:
+            if dice in self.picked:
                 return True
 
         return False
