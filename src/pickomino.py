@@ -6,6 +6,8 @@ from typing import List
 from actions import *
 import os
 
+from src.utils.pickomino_utils import total_points
+
 
 class Pickomino:
 
@@ -30,6 +32,11 @@ class Pickomino:
             if self.with_display:
                 print("Press anything to pass to next player:")
                 input()
+        # Compute who won
+        player_points = total_points(self.players_tiles[player])
+        adversary_points = total_points(self.players_tiles[adversary])
+        self.players[player].outcome(player_points > adversary_points, player_points)
+        self.players[adversary].outcome(adversary_points > player_points, adversary_points)
 
     def deal_with_action(self, player: int, adversary: int, action: (int, int)):
         action_type, tile = action[0], action[1]
@@ -48,7 +55,7 @@ class Pickomino:
         # If player decides to steal a tile, check that the adversary has the tile and take it
         elif action_type == STEAL_TILE:
             if safe_remove(tile, self.players_tiles[adversary]):
-                self.players_tiles.append(tile)
+                self.players_tiles[player].append(tile)
 
     def display(self, player: int, adversary: int):
         if self.with_display:

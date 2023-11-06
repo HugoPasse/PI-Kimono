@@ -17,3 +17,9 @@ class Player:
                  number.
         """
         pass
+
+    def outcome(self, has_won: bool, final_nb_of_points: int):
+        """
+        Called by the Pickomino game has ended to tell if the player has won and how much points they scored
+        """
+        pass

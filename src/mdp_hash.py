@@ -52,7 +52,7 @@ class State:
                 newPicked = []
                 if 0 in self.picked or action.dice == 0:
                     newPicked.append(0)
-                return ([State(frozenset([]), frozenset(newPicked), newScore, True)], [1])
+                return [State(frozenset([]), frozenset(newPicked), newScore, True)], [1]
 
             newPicked = frozenset.union(self.picked, frozenset([action.dice]))
             rem = len(self.dices) - count
@@ -202,12 +202,14 @@ class PickominoMDP:
             print('Iteration of value iteration done in', toc - tic, 's', s ** 0.5)
 
         for h in self.states.keys():
-            if not (self.policy.d[h] is None):
+            if not self.policy.d[h] is None and self.verbose:
                 print('Val :', self.value[h], '---- Action :', self.policy.d[h].dice, self.policy.d[h].stop, '---- ',
                       end='')
             else:
-                print('Val :', self.value[h], '---- Action :', None, None, '---- ', end='')
-            self.states[h].printState()
+                if self.verbose:
+                    print('Val :', self.value[h], '---- Action :', None, None, '---- ', end='')
+            if self.verbose:
+                self.states[h].printState()
 
     def bellmanStateValue(self, state, action, reward):
         s = reward(state, action)
@@ -234,7 +236,6 @@ def reward1(state, action):
             if state.score > 20:
                 return 1
     return 0
-
 
 # action = Action(3, False)
 

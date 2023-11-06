@@ -7,6 +7,7 @@ import numpy as np
 class Dice:
     def __init__(self, verbose=False):
         self.dices = np.random.randint(6, size=8, dtype=np.int16)
+        self.dices.sort()
         self.picked = []
         self.score = 0
         self.remaining = 8
@@ -37,6 +38,7 @@ class Dice:
         # Check if it is legal to throw
         if self.remaining < self.dices.size:
             self.dices = np.random.randint(6, size=self.remaining, dtype=np.int16)
+            self.dices.sort()
         if self.verbose: print('Can\'t throw again, pick a set of dices before')
         return -1
 
@@ -49,7 +51,7 @@ class Dice:
 
     def can_pick(self) -> bool:
         for dice in self.dices:
-            if dice in self.picked:
+            if not dice in self.picked:
                 return True
 
         return False
