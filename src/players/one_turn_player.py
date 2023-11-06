@@ -17,7 +17,8 @@ class OneTurnPlayer(Player):
         self.alpha = alpha
         self.beta = beta
         if with_display:
-            "Initializing one turn MDP player"
+            print("Initializing one turn MDP player")
+
         self.mdp = PickominoMDP()
 
     def tile_decision(self, available_tiles: List[int], adversary_tiles: List[int], player_last_tile, state: State) -> (
@@ -54,7 +55,8 @@ class OneTurnPlayer(Player):
         else:
             return 0, NONE, 0
 
-    def reward(self, available_tiles: List[int], adversary_tiles: List[int], player_last_tile: int, state: State) -> float:
+    def reward(self, available_tiles: List[int], adversary_tiles: List[int], player_last_tile: int,
+               state: State) -> float:
         reward, _, _ = self.tile_decision(available_tiles, adversary_tiles, player_last_tile, state)
         return reward
 
@@ -91,5 +93,5 @@ class OneTurnPlayer(Player):
                 print("Computer decided to pick tile {}".format(tile_tile))
         return tile_action, tile_tile
 
-    def outcome(self, has_won: bool, final_nb_of_points: int):
+    def outcome(self, relative_point_difference: int):
         pass

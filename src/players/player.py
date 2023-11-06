@@ -18,8 +18,9 @@ class Player:
         """
         pass
 
-    def outcome(self, has_won: bool, final_nb_of_points: int):
+    def outcome(self, relative_point_difference: int):
         """
         Called by the Pickomino game has ended to tell if the player has won and how much points they scored
+        :param relative_point_difference: difference between the adversary points and this player's points
         """
         pass

@@ -1,4 +1,3 @@
-import pickle
 import time
 
 from src.value_iteration.action import Action
@@ -6,13 +5,13 @@ from src.value_iteration.dice_launches import possibleDiceLaunches
 from src.value_iteration.policy import Policy
 from src.value_iteration.state import State
 
+
 class PickominoMDP:
     def __init__(self, verbose=False):
         self.states = dict()
         self.probabilities = dict()
         self.verbose = verbose
         self.policy = None
-
         self.init()
 
     def init(self):
@@ -47,10 +46,6 @@ class PickominoMDP:
 
         if self.verbose:
             print('Accessible states :', len(self.states))
-        
-        with open("test.txt", 'wb') as output_file:
-            pickle.dump(self, output_file, -1)
-
 
     def computeOptimalPolicy(self, reward, resetPolicy=False):
         """

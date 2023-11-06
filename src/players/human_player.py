@@ -117,5 +117,5 @@ class HumanPlayer(Player):
         # Now make decision with dices
         return strategy_choice(dice, available_tiles, adversary_tiles)
 
-    def outcome(self, has_won: bool, final_nb_of_points: int):
+    def outcome(self, relative_point_difference: int):
         pass
