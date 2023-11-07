@@ -56,7 +56,7 @@ def biggest_smaller(tile_set: List[int], score: int) -> int:
             biggest = tile
         else:
             return biggest
-
+    return biggest
 
 def num_sorted_arrays(n, m, L=None):
     '''

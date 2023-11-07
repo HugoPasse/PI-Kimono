@@ -32,7 +32,7 @@ class OneTurnPlayer(Player):
         :return: triple (score, tile action, tile to pick)
         """
 
-        if state != None and state.stop:
+        if state is not None and state.stop:
             if 0 in state.picked:
                 tile_to_pick = biggest_smaller(available_tiles, state.score)
                 steal_score = 0
@@ -41,7 +41,7 @@ class OneTurnPlayer(Player):
                     steal_score = self.beta * 2 * tile_value(state.score)
 
                 if steal_score == 0 and pick_score == 0:
-                    return -self.alpha * tile_value(player_last_tile), NONE
+                    return -self.alpha * tile_value(player_last_tile), NONE, player_last_tile
                 else:
                     if pick_score > steal_score:
                         return pick_score, PICK_TILE, tile_to_pick
@@ -66,8 +66,7 @@ class OneTurnPlayer(Player):
 
         policy = self.mdp.policy
         dice = Dice()
-        state = State(dice.dices, dice.picked, dice.score, False)
-        print(state)
+        state = State(dice.dices, frozenset([]), 0, False)
         while not state.stop:
             if self.with_display:
                 dice.print_state()
@@ -90,3 +89,6 @@ class OneTurnPlayer(Player):
             else:
                 print("Computer decided to pick tile {}".format(tile_tile))
         return tile_action, tile_tile
+
+    def outcome(self, has_won: bool, final_nb_of_points: int):
+        pass

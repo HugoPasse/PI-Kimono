@@ -74,18 +74,22 @@ def strategy_choice(dice: Dice, available_tiles: List[int], adversary_tiles: Lis
     stealable_tile = adversary_tiles.count(dice.score) > 0
     pickable_tiles = elements_smaller_than(dice.score, available_tiles)
 
-    if len(pickable_tiles) == 0 and not stealable_tile:
-        print("You have no available actions unfortunately!")
+    if dice.picked.count(0) == 0:
+        print("You haven't picked a worm. Your turns end and you lose your last tile.")
         return NONE, 0
-    elif not stealable_tile:
-        return PICK_TILE, pick_tile_input(pickable_tiles)
     else:
-        # In this case the player can choose either to steal a tile or to pick a tile
-        action = action_choice(dice.score, pickable_tiles)
-        if action == PICK_TILE:
+        if len(pickable_tiles) == 0 and not stealable_tile:
+            print("You have no available actions unfortunately!")
+            return NONE, 0
+        elif not stealable_tile:
             return PICK_TILE, pick_tile_input(pickable_tiles)
         else:
-            return STEAL_TILE, dice.score
+            # In this case the player can choose either to steal a tile or to pick a tile
+            action = action_choice(dice.score, pickable_tiles)
+            if action == PICK_TILE:
+                return PICK_TILE, pick_tile_input(pickable_tiles)
+            else:
+                return STEAL_TILE, dice.score
 
 
 class HumanPlayer(Player):
@@ -112,3 +116,6 @@ class HumanPlayer(Player):
 
         # Now make decision with dices
         return strategy_choice(dice, available_tiles, adversary_tiles)
+
+    def outcome(self, has_won: bool, final_nb_of_points: int):
+        pass
