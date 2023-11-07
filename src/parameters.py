@@ -1,2 +1,2 @@
-NDICES  = 4
-TILES = [i for i in range(11,19)]
+NDICES  = 8
+TILES = [i for i in range(21,37)]

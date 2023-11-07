@@ -14,8 +14,8 @@ class State:
 
     def nextStatesUnderAction(self, action):
         if self.isActionLegal(action):
-            L = []
-            P = []
+            L = ()
+            P = ()
 
             count = self.dices.count(action.dice)
             val = action.dice + 5 * (action.dice == 0)
@@ -32,16 +32,16 @@ class State:
             rem = len(self.dices) - count
 
             for i, dices in enumerate(possibleDiceLaunches[rem]):
-                L.append(State(dices, newPicked, newScore, action.stop))
-                P.append(launchProbability[rem][i])
-            return L, P
-        return [], []
+                L += (State(dices, newPicked, newScore, action.stop),)
+                P += (launchProbability[rem][i],)
+            return (L, P)
+        return ((), ())
 
     def nextStates(self):
         actions = [Action(i, False) for i in range(6)] + [Action(i, True) for i in range(6)]
-        self.childrenStates = []
+        self.childrenStates = ()
         for action in actions:
-            self.childrenStates.append(self.nextStatesUnderAction(action))
+            self.childrenStates += (self.nextStatesUnderAction(action),)
         return self.childrenStates
 
     def printState(self):

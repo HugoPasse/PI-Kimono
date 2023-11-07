@@ -40,6 +40,8 @@ def proba_of_list(l, tri):
     """
     choices = 1
     n = len(l)
+    rem = n
     for k in range(0, max(l) + 1):
-        choices *= tri[n, np.count_nonzero(l == k)]
+        choices *= tri[rem, np.count_nonzero(l == k)]
+        rem -= np.count_nonzero(l == k)
     return (1 / 6) ** n * choices

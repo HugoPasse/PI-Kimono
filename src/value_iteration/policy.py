@@ -36,10 +36,6 @@ class Policy:
 
         childProbas = probabilities[h][hash(action)]
         s = reward(state, action)
-        if s != 0:
-            print('s = ', s, 'for state :', end='')
-            state.printState()
-
         for childHash in childProbas.keys():
             if not (childHash in self.value):
                 self.stateValue(childHash, reward, states, probabilities)
