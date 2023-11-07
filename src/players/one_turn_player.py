@@ -19,7 +19,7 @@ class OneTurnPlayer(Player):
         if with_display:
             print("Initializing one turn MDP player")
 
-        self.mdp = PickominoMDP()
+        self.mdp = PickominoMDP(verbose=True)
 
     def tile_decision(self, available_tiles: List[int], adversary_tiles: List[int], player_last_tile, state: State) -> (
             float, int, int):
@@ -73,7 +73,7 @@ class OneTurnPlayer(Player):
         while not state.stop:
             if self.with_display:
                 dice.print_state()
-            action = policy.d[hash(state)]
+            action = policy.d[hash(state)] #ICI CRASH QUAND action == None
             dice.keep(action.dice)
 
             if self.with_display:

@@ -5,6 +5,8 @@ from src.value_iteration.dice_launches import possibleDiceLaunches
 from src.value_iteration.policy import Policy
 from src.value_iteration.state import State
 
+import parameters
+
 
 class PickominoMDP:
     def __init__(self, verbose=False):
@@ -17,7 +19,7 @@ class PickominoMDP:
     def init(self):
         toVisit = []
 
-        for dices in possibleDiceLaunches[8]:
+        for dices in possibleDiceLaunches[parameters.NDICES]:
             state = State(dices, [], 0, False)
             toVisit.append(state)
             self.states[hash(state)] = state
@@ -73,32 +75,25 @@ class PickominoMDP:
                         self.policy.d[h] = a
                         notAFixpoint = True
             toc = time.time()
-            s = 0
-            for i in self.value.values():
-                s += i ** 2
-            print('Iteration of value iteration done in', toc - tic, 's', s ** 0.5)
 
-        for h in self.states.keys():
-            if not self.policy.d[h] is None and self.verbose:
-                print('Val :', self.value[h], '---- Action :', self.policy.d[h].dice, self.policy.d[h].stop, '---- ',
-                      end='')
-            else:
-                if self.verbose:
-                    print('Val :', self.value[h], '---- Action :', None, None, '---- ', end='')
             if self.verbose:
-                self.states[h].printState()
+                print('Iteration of value iteration done in', toc - tic, 's')
 
     def bellmanStateValue(self, state, action, reward):
         s = reward(state, action)
-        h = hash(state)
-        childProbas = self.probabilities[h][hash(action)]
-
+        childProbas = self.probabilities[hash(state)][hash(action)]
         for childHash in childProbas.keys():
-            if childHash in self.value:
-                s += childProbas[childHash] * self.value[childHash]
-            else:
-                print('Cannot properly compute the Bellman value of', h, 'because node', childHash, 'is not inited')
+            s += childProbas[childHash] * self.value[childHash]
         return s
+
+    def printPolicy(self):
+        for h in self.states.keys():
+            if not self.policy.d[h] is None:
+                print('Val :', self.value[h], '---- Action :', self.policy.d[h].dice, self.policy.d[h].stop, '---- ',
+                      end='')
+            else:
+                print('Val :', self.value[h], '---- Action :', None, None, '---- ', end='')
+            self.states[h].printState()
 
 
 def reward1(state, action):

@@ -2,15 +2,17 @@
 Game classes
 """
 import numpy as np
+import parameters
+
 
 
 class Dice:
     def __init__(self, verbose=False):
-        self.dices = np.random.randint(6, size=8, dtype=np.int16)
+        self.dices = np.random.randint(6, size=parameters.NDICES, dtype=np.int16)
         self.dices.sort()
         self.picked = []
         self.score = 0
-        self.remaining = 8
+        self.remaining = parameters.NDICES
         self.verbose = verbose
 
     def keep(self, i) -> bool:

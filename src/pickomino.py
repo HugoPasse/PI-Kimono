@@ -7,7 +7,7 @@ from actions import *
 import os
 
 from src.utils.pickomino_utils import total_points
-
+import parameters
 
 class Pickomino:
 
@@ -20,7 +20,7 @@ class Pickomino:
                  player_2_tiles=None
                  ):
         self.with_display = with_display
-        self.available_tiles: List[int] = [21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36]
+        self.available_tiles: List[int] = parameters.TILES
         self.players_tiles: List[List[int]] = [[], []]
         self.players: List[Player] = [first_player, second_player]
 
@@ -75,7 +75,7 @@ class Pickomino:
 
     def display(self, player: int, adversary: int):
         if self.with_display:
-            os.system('cls' if os.name == 'nt' else 'clear')
+            # os.system('cls' if os.name == 'nt' else 'clear')
             available_tiles_str = tiles_list_string(self.available_tiles)
             player_tiles_str = tiles_list_string(self.players_tiles[player])
             adversary_tiles_str = tiles_list_string(self.players_tiles[adversary])
