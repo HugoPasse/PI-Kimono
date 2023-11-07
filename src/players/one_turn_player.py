@@ -2,10 +2,12 @@ from typing import List, Callable
 
 from src.actions import NONE, PICK_TILE, STEAL_TILE
 from src.dice import Dice
-from src.mdp_hash import State, Action, PickominoMDP
 from src.players.player import Player
 from src.utils.list_utils import biggest_smaller
 from src.utils.pickomino_utils import tile_value
+from src.value_iteration.action import Action
+from src.value_iteration.pickomino_mdp import PickominoMDP
+from src.value_iteration.state import State
 
 
 class OneTurnPlayer(Player):
@@ -15,7 +17,8 @@ class OneTurnPlayer(Player):
         self.alpha = alpha
         self.beta = beta
         if with_display:
-            "Initializing one turn MDP player"
+            print("Initializing one turn MDP player")
+
         self.mdp = PickominoMDP()
 
     def tile_decision(self, available_tiles: List[int], adversary_tiles: List[int], player_last_tile, state: State) -> (
@@ -52,14 +55,14 @@ class OneTurnPlayer(Player):
         else:
             return 0, NONE, 0
 
-    def reward(self, available_tiles: List[int], adversary_tiles: List[int], player_last_tile: int, state: State,
-               action: Action) -> float:
+    def reward(self, available_tiles: List[int], adversary_tiles: List[int], player_last_tile: int,
+               state: State) -> float:
         reward, _, _ = self.tile_decision(available_tiles, adversary_tiles, player_last_tile, state)
         return reward
 
     def play_round(self, available_tiles: List[int], adversary_tiles: List[int], player_last_tile: int) -> (int, int):
         round_reward: Callable[[State, Action], float] = lambda state, action: (
-            self.reward(available_tiles, adversary_tiles, player_last_tile, state, action))
+            self.reward(available_tiles, adversary_tiles, player_last_tile, state))
         if self.with_display:
             print("Computing optimal policy (this can take time)...")
         self.mdp.computeOptimalPolicy(round_reward, resetPolicy=True)
@@ -90,5 +93,5 @@ class OneTurnPlayer(Player):
                 print("Computer decided to pick tile {}".format(tile_tile))
         return tile_action, tile_tile
 
-    def outcome(self, has_won: bool, final_nb_of_points: int):
+    def outcome(self, relative_point_difference: int):
         pass

@@ -11,11 +11,27 @@ from src.utils.pickomino_utils import total_points
 
 class Pickomino:
 
-    def __init__(self, first_player: Player, second_player: Player, with_display: bool = False):
+    def __init__(self,
+                 first_player: Player,
+                 second_player: Player,
+                 with_display: bool = False,
+                 available_tiles=None,
+                 player_1_tiles=None,
+                 player_2_tiles=None
+                 ):
         self.with_display = with_display
         self.available_tiles: List[int] = [21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36]
         self.players_tiles: List[List[int]] = [[], []]
         self.players: List[Player] = [first_player, second_player]
+
+        if available_tiles is not None:
+            self.available_tiles = available_tiles
+
+        if player_1_tiles is not None:
+            self.players_tiles[0] = player_1_tiles
+
+        if player_2_tiles is not None:
+            self.players_tiles[1] = player_2_tiles
 
     def play(self):
         player = 0
@@ -35,8 +51,8 @@ class Pickomino:
         # Compute who won
         player_points = total_points(self.players_tiles[player])
         adversary_points = total_points(self.players_tiles[adversary])
-        self.players[player].outcome(player_points > adversary_points, player_points)
-        self.players[adversary].outcome(adversary_points > player_points, adversary_points)
+        self.players[player].outcome(adversary_points - player_points)
+        self.players[adversary].outcome(player_points - adversary_points)
 
     def deal_with_action(self, player: int, adversary: int, action: (int, int)):
         action_type, tile = action[0], action[1]
