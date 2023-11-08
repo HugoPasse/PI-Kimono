@@ -12,9 +12,12 @@ def safe_remove(tile: int, tile_set: List[int]) -> bool:
 
 def insert_tile(tile: int, tile_set: List[int]):
     index = 0
-    while tile > tile_set[index]:
+    while index < len(tile_set) and tile > tile_set[index]:
         index += 1
-    tile_set.insert(index, tile)
+    if index >= len(tile_set):
+        tile_set.append(tile)
+    else:
+        tile_set.insert(index, tile)
 
 
 def safe_last_tile(tile_set: List[int]) -> int:
@@ -57,6 +60,7 @@ def biggest_smaller(tile_set: List[int], score: int) -> int:
         else:
             return biggest
     return biggest
+
 
 def num_sorted_arrays(n, m, L=None):
     '''

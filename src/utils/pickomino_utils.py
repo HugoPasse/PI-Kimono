@@ -1,21 +1,16 @@
 from typing import List
 
+from src import parameters
 
-def tile_value(tile: int) -> int:
-    if tile >= 33:
-        return 4
-    elif tile >= 29:
-        return 3
-    elif tile >= 25:
-        return 2
-    elif tile>=21:
-        return 1
-    else:
-        return 0
+
+def value_of(tile: int):
+    nb_tiles = len(parameters.TILES)
+    first_tile = parameters.TILES[0]
+    return min(max(4 * (tile - first_tile) // nb_tiles + 1, 0), 4)
 
 
 def total_points(tiles: List[int]) -> int:
     total = 0
     for tile in tiles:
-        total += tile_value(tile)
+        total += value_of(tile)
     return total

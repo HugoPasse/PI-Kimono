@@ -4,7 +4,7 @@ from src.actions import NONE, PICK_TILE, STEAL_TILE
 from src.dice import Dice
 from src.players.player import Player
 from src.utils.list_utils import biggest_smaller
-from src.utils.pickomino_utils import tile_value
+from src.utils.pickomino_utils import value_of
 from src.value_iteration.action import Action
 from src.value_iteration.pickomino_mdp import PickominoMDP
 from src.value_iteration.state import State
@@ -12,14 +12,14 @@ from src.value_iteration.state import State
 
 class OneTurnPlayer(Player):
 
-    def __init__(self, alpha: float = 1, beta: float = 1, with_display: bool = False):
+    def __init__(self, alpha: float = 1, beta: float = 1, with_display: bool = False, initial_mdp=PickominoMDP()):
         super().__init__(with_display)
         self.alpha = alpha
         self.beta = beta
         if with_display:
             print("Initializing one turn MDP player")
 
-        self.mdp = PickominoMDP(verbose=True)
+        self.mdp = initial_mdp
 
     def tile_decision(self, available_tiles: List[int], adversary_tiles: List[int], player_last_tile, state: State) -> (
             float, int, int):
@@ -34,24 +34,23 @@ class OneTurnPlayer(Player):
         :param state: state of the turn.
         :return: triple (score, tile action, tile to pick)
         """
-
         if state is not None and state.stop:
             if 0 in state.picked:
                 tile_to_pick = biggest_smaller(available_tiles, state.score)
                 steal_score = 0
-                pick_score = tile_value(tile_to_pick)
+                pick_score = value_of(tile_to_pick)
                 if state.score in adversary_tiles:
-                    steal_score = self.beta * 2 * tile_value(state.score)
+                    steal_score = self.beta * 2 * value_of(state.score)
 
                 if steal_score == 0 and pick_score == 0:
-                    return -self.alpha * tile_value(player_last_tile), NONE, player_last_tile
+                    return -self.alpha * value_of(player_last_tile), NONE, player_last_tile
                 else:
                     if pick_score > steal_score:
                         return pick_score, PICK_TILE, tile_to_pick
                     else:
                         return steal_score, STEAL_TILE, state.score
             else:
-                return -self.alpha * tile_value(player_last_tile), NONE, player_last_tile
+                return -self.alpha * value_of(player_last_tile), NONE, player_last_tile
         else:
             return 0, NONE, 0
 
@@ -73,7 +72,9 @@ class OneTurnPlayer(Player):
         while not state.stop:
             if self.with_display:
                 dice.print_state()
-            action = policy.d[hash(state)] #ICI CRASH QUAND action == None
+            action = policy.d[hash(state)]
+            if action is None:
+                break
             dice.keep(action.dice)
 
             if self.with_display:
