@@ -2,7 +2,7 @@ from src.value_iteration.pickomino_mdp import PickominoMDP
 from src.value_iteration.dice_launches import possibleDiceLaunches, launchProbability
 from src.value_iteration.state import State
 
-import parameters
+from src.parameters import NDICES
 import time
 
 
@@ -29,8 +29,8 @@ def compute_proba_under_reward(pickomino,reward):
 	mdp.computeOptimalPolicy(reward,resetPolicy=True)
 	
 	p = 0
-	for i in range(len(launchProbability[parameters.NDICES])):
-		p += launchProbability[parameters.NDICES][i] * mdp.value[hash(State(possibleDiceLaunches[parameters.NDICES][i],(),0,False))]
+	for i in range(len(launchProbability[NDICES])):
+		p += launchProbability[NDICES][i] * mdp.value[hash(State(possibleDiceLaunches[NDICES][i],(),0,False))]
 	
 	return p
 

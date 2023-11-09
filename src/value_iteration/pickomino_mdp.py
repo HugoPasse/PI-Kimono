@@ -98,25 +98,24 @@ class PickominoMDP:
 
 def reward1(state, action):
     if (0 in state.picked) and (state.stop):
-        if state.score <= 37:
-            if state.score > 32:
-                return 4
-            if state.score > 28:
-                return 3
-            if state.score > 24:
-                return 2
-            if state.score > 20:
-                return 1
+        if state.score > 32:
+            return 4
+        if state.score > 28:
+            return 3
+        if state.score > 24:
+            return 2
+        if state.score > 20:
+            return 1
     return 0
 
 
 # action = Action(3, False)
 
-# dices = (3, 3, 5, 5)
-# picked = [1, 2]
+# dices = (0, 1, 3, 3, 3, 4, 4, 5)
+# picked = ()
 # stop = False
 
-# state = State(dices, picked, 12, stop)
+# state = State(dices, picked, 0, stop)
 
 # print('Init')
 # tic = time.time()
@@ -125,3 +124,5 @@ def reward1(state, action):
 # print('Time elapsed to init MDP:', toc - tic, 's')
 
 # mdp.computeOptimalPolicy(reward1)
+
+# print(mdp.value[hash(state)])
