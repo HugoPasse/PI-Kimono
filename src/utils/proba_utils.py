@@ -38,6 +38,9 @@ def proba_of_list(l, tri):
     :param tri: the pascal triangle, should be computed up to rank len(l)
     :return:
     """
+    if len(l) == 0:
+        return 1
+        
     choices = 1
     n = len(l)
     rem = n

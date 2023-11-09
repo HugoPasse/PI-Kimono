@@ -23,17 +23,21 @@ def one_sgd_step(eps, step_size, nb_compute):
     lost = [0, 0, 0]
     drew_with_0 = [0, 0, 0]
 
-    alpha_beta_thread = threading.Thread(target=compute_mean, args=(alpha, beta, nb_compute, mean_score, won, lost, drew_with_0, 0))
-    dalpha_beta_thread = threading.Thread(target=compute_mean, args=(alpha + eps, beta, nb_compute, mean_score, won, lost, drew_with_0,  1))
-    alpha_dbeta_thread = threading.Thread(target=compute_mean, args=(alpha, beta + eps, nb_compute, mean_score, won, lost, drew_with_0,  2))
+    # alpha_beta_thread = threading.Thread(target=compute_mean, args=(alpha, beta, nb_compute, mean_score, won, lost, drew_with_0, 0))
+    # dalpha_beta_thread = threading.Thread(target=compute_mean, args=(alpha + eps, beta, nb_compute, mean_score, won, lost, drew_with_0,  1))
+    # alpha_dbeta_thread = threading.Thread(target=compute_mean, args=(alpha, beta + eps, nb_compute, mean_score, won, lost, drew_with_0,  2))
 
-    alpha_beta_thread.start()
-    dalpha_beta_thread.start()
-    alpha_dbeta_thread.start()
+    alpha_beta_thread = compute_mean(alpha, beta, nb_compute, mean_score, won, lost, drew_with_0, 0)
+    dalpha_beta_thread = compute_mean(alpha + eps, beta, nb_compute, mean_score, won, lost, drew_with_0,  1)
+    alpha_dbeta_thread = compute_mean(alpha, beta + eps, nb_compute, mean_score, won, lost, drew_with_0,  2)
 
-    alpha_beta_thread.join()
-    dalpha_beta_thread.join()
-    alpha_dbeta_thread.join()
+    # alpha_beta_thread.start()
+    # dalpha_beta_thread.start()
+    # alpha_dbeta_thread.start()
+
+    # alpha_beta_thread.join()
+    # dalpha_beta_thread.join()
+    # alpha_dbeta_thread.join()
 
     gradient = [(mean_score[1] - mean_score[0]) / eps, (mean_score[2] - mean_score[0]) / eps]
     new_alpha = min(max(alpha + gradient[0] * step_size, 0), 2)  # + here we want to maximize score and keep in [0,2]
@@ -48,7 +52,7 @@ def one_sgd_step(eps, step_size, nb_compute):
 
 
 def compute_mean(alpha, beta, nb_compute, mean_score: List[float],
-                 games_won: List[int], games_lost: List[int], games_drew_with_0: List[0], index_to_write: int):
+                 games_won: List[int], games_lost: List[int], games_drew_with_0: List[int], index_to_write: int):
     total_points = 0
     won = 0
     lost = 0
