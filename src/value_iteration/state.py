@@ -34,8 +34,8 @@ class State:
             for i, dices in enumerate(possibleDiceLaunches[rem]):
                 L += (State(dices, newPicked, newScore, action.stop),)
                 P += (launchProbability[rem][i],)
-            return (L, P)
-        return ((), ())
+            return L, P
+        return (), ()
 
     def nextStates(self):
         actions = [Action(i, False) for i in range(6)] + [Action(i, True) for i in range(6)]

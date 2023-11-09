@@ -1,5 +1,6 @@
 from typing import List, Callable
 
+from src import parameters
 from src.actions import LOSE_TILE, PICK_TILE, STEAL_TILE
 from src.dice import Dice
 from src.players.player import Player
@@ -64,6 +65,12 @@ class OneTurnPlayer(Player):
             self.reward(available_tiles, adversary_tiles, player_last_tile, state))
         if self.with_display:
             print("Computing optimal policy (this can take time)...")
+        reward_string = ""
+        for i in range(parameters.NDICES * 5):
+            state = State([], [0], i, True)
+            action = Action([], True)
+            reward_string += str(round_reward(state, action)) + " "
+        # print(reward_string)
         self.mdp.computeOptimalPolicy(round_reward, resetPolicy=True)
 
         policy = self.mdp.policy
@@ -71,25 +78,31 @@ class OneTurnPlayer(Player):
         state = State(dice.dices, frozenset([]), 0, False)
         boucles_nb = 0
         while not state.stop:
+            boucles_nb += 1
+
             if self.with_display:
                 dice.print_state()
             action = policy.d[hash(state)]
+
             if action is None:
                 break
 
-            if boucles_nb >=10:
-                print("{} boucles faites. Action : {} {}. State: {} {} {} {}".format(boucles_nb, action.dice, action.stop, state.dices, state.picked, state.score, state.stop))
-                return LOSE_TILE, 0
+            if boucles_nb >= parameters.NDICES + 2:
+                print(
+                    "{} boucles faites. Action : {} {}. State: {} {} {} {}".format(boucles_nb, action.dice, action.stop,
+                                                                                   state.dices, state.picked,
+                                                                                   state.score, state.stop))
+                return LOSE_TILE, player_last_tile
 
             dice.keep(action.dice)
 
             if self.with_display:
-                print("Computer decided to keep dice {}".format(action.dice))
-            stop = not dice.can_pick()
-            if not stop:
-                dice.throw()
-            state = State(dice.dices, dice.picked, dice.score, stop)
-            boucles_nb+=1
+                print("Computer decided to keep dice {}\n\n".format(action.dice))
+
+            dice.throw()
+            state = State(dice.dices, dice.picked, dice.score, action.stop)
+            if action.stop:
+                break
 
         _, tile_action, tile_tile = self.tile_decision(available_tiles, adversary_tiles, player_last_tile, state)
         if self.with_display:
@@ -100,4 +113,3 @@ class OneTurnPlayer(Player):
             else:
                 print("Computer decided to pick tile {}".format(tile_tile))
         return tile_action, tile_tile
-

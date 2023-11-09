@@ -1,3 +1,4 @@
+import random
 from typing import List
 
 from src import parameters
@@ -18,12 +19,17 @@ def total_points(tiles: List[int]) -> int:
 
 def read_params(file: str) -> (float, float):
     with open(file, 'r') as file:
-        last_line = file.readlines()[-1]
-        alpha_beta = last_line.split(' ')
-        return float(alpha_beta[0]), float(alpha_beta[1])
+        try:
+            last_line = file.readlines()[-1]
+            alpha_beta = last_line.split(' ')
+            return float(alpha_beta[0]), float(alpha_beta[1])
+        except IndexError:
+            alpha = random.uniform(0.0, 2.0)
+            beta = random.uniform(0.0, 2.0)
+            return alpha, beta
 
 
-def write_params(file: str, alpha: float, beta: float, games: int, wins: int):
+def write_params(file: str, alpha: float, beta: float, games: int, wins: int, lost: int, drew_with_0: int):
     with open(file, 'a') as file:
-        file.write("\n{} {} {} {}".format(alpha, beta, games, wins))
+        file.write("\n{} {} {} {} {} {}".format(alpha, beta, games, wins, lost, drew_with_0))
         return

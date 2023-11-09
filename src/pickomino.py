@@ -1,3 +1,5 @@
+import copy
+
 from src.players.player import *
 from src.utils.display_utils import tiles_list_string
 from src.utils.list_utils import safe_last_tile, safe_remove, insert_tile, safe_pop
@@ -19,17 +21,12 @@ class Pickomino:
                  available_tiles=None,
                  player_1_tiles=None,
                  player_2_tiles=None,
-                 short_end_display=False,
-                 player_1_outcome=True
                  ):
         self.with_display = with_display
-        self.short_end_display = short_end_display
-        self.available_tiles: List[int] = parameters.TILES
+        self.available_tiles: List[int] = copy.deepcopy(parameters.TILES)
         self.deleted_tiles: List[int] = []
         self.players_tiles: List[List[int]] = [[], []]
         self.players: List[Player] = [first_player, second_player]
-        self.player_1_outcome = player_1_outcome
-
         if available_tiles is not None:
             self.available_tiles = available_tiles
 
@@ -39,12 +36,12 @@ class Pickomino:
         if player_2_tiles is not None:
             self.players_tiles[1] = player_2_tiles
 
-    def play(self) -> float:
+    def play(self) -> (float, float):
         player = 0
         adversary = 1
         while len(self.available_tiles) > 0:
-            #print("{} available {} removed {} player 1 {} player 2"
-             #     .format(len(self.available_tiles), len(self.deleted_tiles), len(self.players_tiles[0]), len(self.players_tiles[1])))
+            # print("{} available {} removed {} player 1 {} player 2"
+            #     .format(len(self.available_tiles), len(self.deleted_tiles), len(self.players_tiles[0]), len(self.players_tiles[1])))
             self.display(player, adversary)
             last_tile: int = safe_last_tile(self.players_tiles[player])
             adversary_tiles: List[int] = self.players_tiles[adversary]
@@ -59,11 +56,7 @@ class Pickomino:
         # Compute who won
         player_1_points = total_points(self.players_tiles[0])
         player_2_points = total_points(self.players_tiles[1])
-        self.end_display(player_1_points, player_2_points)
-        if self.player_1_outcome:
-            return player_1_points - player_2_points
-        else:
-            return player_2_points - player_1_points
+        return player_1_points, player_2_points
 
     def deal_with_action(self, player: int, adversary: int, action: (int, int)):
         action_type, tile = action[0], action[1]
@@ -99,10 +92,3 @@ class Pickomino:
                             + adversary_tiles_str + "\n\nPlayer " + str(player) + "'s turn to play\n"
                             + "=======================")
             print(final_string)
-
-    def end_display(self, player_1_points: int, player_2_points: int):
-        if not self.short_end_display:
-            print("Game finished with final state:")
-            self.display(0, 1, force_show=True)
-        else:
-            print("Game ended. Player 1 got {} points. Player 2 got {} points".format(player_1_points, player_2_points))
