@@ -11,6 +11,8 @@ def safe_remove(tile: int, tile_set: List[int]) -> bool:
 
 
 def insert_tile(tile: int, tile_set: List[int]):
+    if tile is None:
+        return
     index = 0
     while index < len(tile_set) and tile > tile_set[index]:
         index += 1
@@ -25,6 +27,13 @@ def safe_last_tile(tile_set: List[int]) -> int:
         return tile_set[-1]
     except IndexError:
         return 0
+
+
+def safe_pop(tile_set: List[int]):
+    if len(tile_set) > 0:
+        return tile_set.pop()
+    else:
+        return None
 
 
 def elements_smaller_than(tile: int, tile_set: List[int]) -> List[int]:

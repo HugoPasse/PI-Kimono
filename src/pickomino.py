@@ -1,6 +1,6 @@
 from src.players.player import *
 from src.utils.display_utils import tiles_list_string
-from src.utils.list_utils import safe_last_tile, safe_remove, insert_tile
+from src.utils.list_utils import safe_last_tile, safe_remove, insert_tile, safe_pop
 
 from typing import List
 from actions import *
@@ -19,7 +19,8 @@ class Pickomino:
                  available_tiles=None,
                  player_1_tiles=None,
                  player_2_tiles=None,
-                 short_end_display=False
+                 short_end_display=False,
+                 player_1_outcome=True
                  ):
         self.with_display = with_display
         self.short_end_display = short_end_display
@@ -27,6 +28,7 @@ class Pickomino:
         self.deleted_tiles: List[int] = []
         self.players_tiles: List[List[int]] = [[], []]
         self.players: List[Player] = [first_player, second_player]
+        self.player_1_outcome = player_1_outcome
 
         if available_tiles is not None:
             self.available_tiles = available_tiles
@@ -37,10 +39,12 @@ class Pickomino:
         if player_2_tiles is not None:
             self.players_tiles[1] = player_2_tiles
 
-    def play(self):
+    def play(self) -> float:
         player = 0
         adversary = 1
         while len(self.available_tiles) > 0:
+            #print("{} available {} removed {} player 1 {} player 2"
+             #     .format(len(self.available_tiles), len(self.deleted_tiles), len(self.players_tiles[0]), len(self.players_tiles[1])))
             self.display(player, adversary)
             last_tile: int = safe_last_tile(self.players_tiles[player])
             adversary_tiles: List[int] = self.players_tiles[adversary]
@@ -53,23 +57,23 @@ class Pickomino:
                 print("Press anything to pass to next player:")
                 input()
         # Compute who won
-        player_points = total_points(self.players_tiles[player])
-        adversary_points = total_points(self.players_tiles[adversary])
-        self.players[player].outcome(adversary_points - player_points)
-        self.players[adversary].outcome(player_points - adversary_points)
-        player_1_points = player_points if player == 0 else adversary_points
-        player_2_points = adversary_points if player == 0 else player_points
+        player_1_points = total_points(self.players_tiles[0])
+        player_2_points = total_points(self.players_tiles[1])
         self.end_display(player_1_points, player_2_points)
+        if self.player_1_outcome:
+            return player_1_points - player_2_points
+        else:
+            return player_2_points - player_1_points
 
     def deal_with_action(self, player: int, adversary: int, action: (int, int)):
         action_type, tile = action[0], action[1]
 
         # If player does not do anything, then they lose their last tile
-        if action_type == NONE:
+        if action_type == LOSE_TILE:
             if len(self.players_tiles[player]) > 0:
                 last_tile = self.players_tiles[player].pop()
                 insert_tile(last_tile, self.available_tiles)
-            self.deleted_tiles.append(self.available_tiles.pop())
+            insert_tile(safe_pop(self.available_tiles), self.deleted_tiles)
 
         # If player decides to take a tile, check that it is available and add it to its tiles
         elif action_type == PICK_TILE:
