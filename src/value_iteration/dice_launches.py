@@ -1,9 +1,9 @@
 from src.utils.list_utils import sorted_arrays
 from src.utils.proba_utils import pascal_triangle, proba_of_list
-import parameters
+from src.parameters import NDICES
 
 
-possibleDiceLaunches = [[]] + [sorted_arrays(0, 6, i) for i in range(1, parameters.NDICES+1)]
+possibleDiceLaunches = [[]] + [sorted_arrays(0, 6, i) for i in range(1, NDICES+1)]
 pascalTriangle = pascal_triangle(9)
 launchProbability = []
 

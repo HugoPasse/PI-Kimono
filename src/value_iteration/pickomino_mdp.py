@@ -5,7 +5,7 @@ from src.value_iteration.dice_launches import possibleDiceLaunches
 from src.value_iteration.policy import Policy
 from src.value_iteration.state import State
 
-import parameters
+from src.parameters import NDICES
 
 
 class PickominoMDP:
@@ -19,7 +19,7 @@ class PickominoMDP:
     def init(self):
         toVisit = []
 
-        for dices in possibleDiceLaunches[parameters.NDICES]:
+        for dices in possibleDiceLaunches[NDICES]:
             state = State(dices, [], 0, False)
             toVisit.append(state)
             self.states[hash(state)] = state
@@ -109,6 +109,7 @@ def reward1(state, action):
                 return 1
     return 0
 
+
 # action = Action(3, False)
 
 # dices = (3, 3, 5, 5)
@@ -117,6 +118,7 @@ def reward1(state, action):
 
 # state = State(dices, picked, 12, stop)
 
+# print('Init')
 # tic = time.time()
 # mdp = PickominoMDP(verbose=True)
 # toc = time.time()
