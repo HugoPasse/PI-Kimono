@@ -22,14 +22,14 @@ def read_params(file: str) -> (float, float):
         try:
             last_line = file.readlines()[-1]
             alpha_beta = last_line.split(' ')
-            return float(alpha_beta[0]), float(alpha_beta[1])
+            return int(alpha_beta[0]), float(alpha_beta[1]), float(alpha_beta[2])
         except IndexError:
             alpha = random.uniform(0.0, 2.0)
             beta = random.uniform(0.0, 2.0)
-            return alpha, beta
+            return 0, alpha, beta
 
 
-def write_params(file: str, alpha: float, beta: float, games: int, wins: int, lost: int, drew_with_0: int):
+def write_params(file: str, n_iter: int, alpha: float, beta: float, games: int, wins: int, lost: int, drew_with_0: int):
     with open(file, 'a') as file:
-        file.write("\n{} {} {} {} {} {}".format(alpha, beta, games, wins, lost, drew_with_0))
+        file.write("\n{} {} {} {} {} {} {}".format(n_iter, alpha, beta, games, wins, lost, drew_with_0))
         return

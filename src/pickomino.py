@@ -40,8 +40,6 @@ class Pickomino:
         player = 0
         adversary = 1
         while len(self.available_tiles) > 0:
-            # print("{} available {} removed {} player 1 {} player 2"
-            #     .format(len(self.available_tiles), len(self.deleted_tiles), len(self.players_tiles[0]), len(self.players_tiles[1])))
             self.display(player, adversary)
             last_tile: int = safe_last_tile(self.players_tiles[player])
             adversary_tiles: List[int] = self.players_tiles[adversary]
@@ -80,7 +78,7 @@ class Pickomino:
 
     def display(self, player: int, adversary: int, force_show=False):
         if self.with_display or force_show:
-            # os.system('cls' if os.name == 'nt' else 'clear')
+            os.system('cls' if os.name == 'nt' else 'clear')
             available_tiles_str = tiles_list_string(self.available_tiles)
             deleted_tiles_str = tiles_list_string(self.deleted_tiles)
             player_tiles_str = tiles_list_string(self.players_tiles[player])

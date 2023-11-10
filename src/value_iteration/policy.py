@@ -6,14 +6,16 @@ class Policy:
         self.d = dict()
         self.actions = [Action(i, False) for i in range(6)] + [Action(i, True) for i in range(6)]
 
-    def initRandomPolicy(self, states):
+    def initRandomPolicy(self, states, probabilities):
+        t = 0
         for h in states.keys():  # Iterate over states
             st = states[h]
             self.d[h] = None
             for a in range(12):  # Find an action that can be performed
-                if st.isActionLegal(self.actions[a]):
-                    self.d[h] = self.actions[a]
-                    break
+                if len(probabilities[h][a]) > 0:
+                    for g in probabilities[h][a].keys():  # Find a state that can be reached from st by doing action ai
+                        nextState = states[g]
+                        break
 
     def computeValue(self, reward, states, probabilities):
         self.value = dict()

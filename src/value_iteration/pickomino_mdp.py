@@ -58,7 +58,7 @@ class PickominoMDP:
         actions = [Action(i, False) for i in range(6)] + [Action(i, True) for i in range(6)]
         if resetPolicy or (self.policy is None):
             self.policy = Policy()
-            self.policy.initRandomPolicy(self.states)
+            self.policy.initRandomPolicy(self.states, self.probabilities)
 
         self.value = self.policy.computeValue(reward, self.states, self.probabilities)
 
@@ -69,8 +69,8 @@ class PickominoMDP:
             for h in self.states.keys():
                 state = self.states[h]
                 for a in actions:
-                    if not state.isActionLegal(a):
-                        pass
+                    #if not state.isActionLegal(a):
+                     #   pass
                     newVal = self.bellmanStateValue(state, a, reward)
                     if newVal > self.value[h]:
                         self.value[h] = newVal

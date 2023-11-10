@@ -65,20 +65,15 @@ class OneTurnPlayer(Player):
             self.reward(available_tiles, adversary_tiles, player_last_tile, state))
         if self.with_display:
             print("Computing optimal policy (this can take time)...")
-        reward_string = ""
-        for i in range(parameters.NDICES * 5):
-            state = State([], [0], i, True)
-            action = Action([], True)
-            reward_string += str(round_reward(state, action)) + " "
-        # print(reward_string)
+
         self.mdp.computeOptimalPolicy(round_reward, resetPolicy=True)
 
         policy = self.mdp.policy
         dice = Dice()
         state = State(dice.dices, frozenset([]), 0, False)
-        boucles_nb = 0
+        circuit_breaker = 0
         while not state.stop:
-            boucles_nb += 1
+            circuit_breaker += 1
 
             if self.with_display:
                 dice.print_state()
@@ -87,11 +82,8 @@ class OneTurnPlayer(Player):
             if action is None:
                 break
 
-            if boucles_nb >= parameters.NDICES + 2:
-                print(
-                    "{} boucles faites. Action : {} {}. State: {} {} {} {}".format(boucles_nb, action.dice, action.stop,
-                                                                                   state.dices, state.picked,
-                                                                                   state.score, state.stop))
+            if circuit_breaker >= parameters.NDICES + 2:
+                # Should not happen, but we make sure that we never loop indefinitely
                 return LOSE_TILE, player_last_tile
 
             dice.keep(action.dice)
